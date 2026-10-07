@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0b1220">
+  <title>🔧 Guia de Conserto — Lava e Seca Brastemp BNQ10AB (F1E2)</title>
+  <meta name="description" content="Diagnóstico passo a passo do erro F1E2 na Lava e Seca Brastemp BNQ10AB 127V, do teste mais barato ao mais caro.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E🔧%3C/text%3E%3C/svg%3E">
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#111a2e; --panel2:#16213a; --line:#25324f;
+      --text:#e8eefc; --muted:#9aa8c7; --blue:#6cb6ff; --green:#4ade80;
+      --amber:#fbbf24; --red:#f87171; --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{margin:0;background:radial-gradient(circle at 0 0,rgba(108,182,255,.12),transparent 26rem),var(--bg);
+      color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+      padding-bottom:env(safe-area-inset-bottom)}
+    .wrap{width:min(860px,100% - 28px);margin:0 auto}
+    header{position:sticky;top:0;z-index:10;background:rgba(11,18,32,.88);backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line)}
+    nav{display:flex;gap:14px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+    nav::-webkit-scrollbar{display:none}
+    nav a{white-space:nowrap;color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:600;
+      padding:6px 10px;border:1px solid var(--line);border-radius:999px}
+    nav a:hover{color:var(--text);border-color:var(--blue)}
+    .hero{padding:34px 0 8px}
+    .tag{display:inline-block;padding:5px 10px;border-radius:999px;background:rgba(108,182,255,.12);
+      color:var(--blue);font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+    h1{font-size:clamp(1.8rem,6vw,2.8rem);line-height:1.08;margin:14px 0 10px;letter-spacing:-.03em}
+    h2{font-size:clamp(1.3rem,4.5vw,1.7rem);margin:0 0 12px;letter-spacing:-.02em}
+    h3{font-size:1.05rem;margin:20px 0 8px}
+    p{margin:8px 0}
+    .lead{color:#c5d1ea;font-size:1.05rem}
+    section{padding:22px 0 4px;scroll-margin-top:64px}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+    .panel+.panel{margin-top:12px}
+    .callout{border-left:4px solid var(--blue);background:rgba(108,182,255,.08);padding:14px 16px;
+      border-radius:4px 12px 12px 4px;margin:14px 0}
+    .callout.warn{border-color:var(--amber);background:rgba(251,191,36,.08)}
+    .callout.danger{border-color:var(--red);background:rgba(248,113,113,.09)}
+    .callout.ok{border-color:var(--green);background:rgba(74,222,128,.08)}
+    .table{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:12px 0;-webkit-overflow-scrolling:touch}
+    table{width:100%;border-collapse:collapse;min-width:520px;background:var(--panel2)}
+    th,td{padding:11px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:.93rem}
+    th{color:var(--blue);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;background:rgba(108,182,255,.06)}
+    tr:last-child td{border-bottom:0}
+    .money{color:var(--green);font-weight:800;white-space:nowrap}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:16px}
+    .card{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}
+    .card small{color:var(--muted);font-weight:700;text-transform:uppercase;font-size:.7rem;letter-spacing:.06em}
+    .card b{display:block;font-size:1.15rem;margin-top:4px}
+    .steps{counter-reset:s;list-style:none;padding:0;margin:10px 0}
+    .steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+    .steps li::before{content:counter(s);position:absolute;left:0;top:2px;width:30px;height:30px;border-radius:9px;
+      background:var(--blue);color:#06101f;font-weight:900;display:grid;place-items:center}
+    .check{list-style:none;padding:0;margin:8px 0}
+    .check li{margin:0}
+    .check label{display:flex;gap:12px;align-items:flex-start;padding:10px 4px;border-bottom:1px dashed var(--line);cursor:pointer}
+    .check li:last-child label{border-bottom:0}
+    .check input{width:22px;height:22px;flex:0 0 22px;margin-top:2px;accent-color:var(--green)}
+    .check input:checked+span{color:var(--muted);text-decoration:line-through}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.72rem;font-weight:800}
+    .b-high{background:rgba(248,113,113,.15);color:var(--red)}
+    .b-mid{background:rgba(251,191,36,.15);color:var(--amber)}
+    .b-low{background:rgba(74,222,128,.15);color:var(--green)}
+    code{background:#0a1426;border:1px solid var(--line);padding:1px 6px;border-radius:6px;font-size:.88em}
+    .flow{display:grid;gap:8px;margin:14px 0}
+    .flow div{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+    .flow .arrow{border:0;background:none;padding:0;text-align:center;color:var(--muted)}
+    .reset{margin-top:10px;background:transparent;color:var(--muted);border:1px solid var(--line);
+      border-radius:10px;padding:8px 12px;font-size:.85rem;cursor:pointer}
+    footer{color:var(--muted);font-size:.82rem;padding:30px 0 50px;border-top:1px solid var(--line);margin-top:30px}
+    a{color:var(--blue)}
+    @media print{header,.reset{display:none}body{background:#fff;color:#111}.panel,.card,table{background:#fff}}
+  </style>
+</head>
+<body>
+<header>
+  <nav class="wrap" aria-label="Seções">
+    <a href="#erro">1 · O erro</a>
+    <a href="#material">2 · Material</a>
+    <a href="#teste1">3 · Tensão</a>
+    <a href="#teste2">4 · Instalação</a>
+    <a href="#rede">5 · Concessionária</a>
+    <a href="#teste3">6 · Abrir</a>
+    <a href="#placa">7 · Placa</a>
+    <a href="#custos">8 · Custos</a>
+  </nav>
+</header>
+
+<div class="wrap hero">
+  <span class="tag">🔧 Guia de diagnóstico</span>
+  <h1>Lava e Seca Brastemp BNQ10AB 127V — erro F1E2</h1>
+  <p class="lead">Testes em ordem, do mais barato pro mais caro. Cada teste elimina uma causa. Só se gasta dinheiro quando houver certeza do defeito.</p>
+  <div class="cards">
+    <div class="card"><small>Primeiro passo</small><b>Medir a tensão</b></div>
+    <div class="card"><small>Faixa aceita (127V)</small><b>106 V a 135 V</b></div>
+    <div class="card"><small>Custo mais provável</small><b class="money">R$ 0 – 100</b></div>
+    <div class="card"><small>Pior caso (placa nova)</small><b class="money">até R$ 1.400</b></div>
+  </div>
+  <div class="callout warn"><strong>Importante:</strong> ninguém consegue dizer qual peça tem defeito sem medir. Façam os testes nesta ordem.</div>
+</div>
+
+<main class="wrap">
+
+<section id="erro">
+  <h2>1 · O que o F1E2 significa</h2>
+  <div class="panel">
+    <p><strong>F1E2</strong> = falha de comunicação entre a <strong>placa principal</strong> e a <strong>placa do motor</strong> (inversora).</p>
+    <p>Um boletim técnico da Brastemp (<code>BTLV0187</code>) diz que muitas vezes quem causa esse erro é a <strong>tensão da rede fora da faixa</strong>, e não uma placa queimada. Na versão 127V a faixa aceita é <strong>106 V a 135 V</strong>. Se a tensão cair abaixo de 106 V, mesmo que por um instante, a máquina se protege e mostra F1E2.</p>
+    <div class="callout">O próprio boletim avisa: <strong>trocar a placa não resolve se a rede estiver ruim.</strong></div>
+    <h3>Por que acontece na centrifugação e no ciclo quente</h3>
+    <p>Nesses momentos a máquina puxa mais corrente (até uns 12 A). Em rede 127V, qualquer mau contato (tomada frouxa, emenda, borne do disjuntor, neutro solto no quadro) ou rede fraca da concessionária derruba a tensão bem nessa hora. É exatamente quando ela desliga.</p>
+  </div>
+
+  <h3>As 4 causas possíveis</h3>
+  <div class="table"><table>
+    <thead><tr><th>#</th><th>Causa</th><th>Onde fica</th><th>Chance</th><th>Custo</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td><strong>Queda de tensão</strong> (mau contato ou rede fraca)</td><td>Tomada, fiação, quadro, padrão de entrada</td><td><span class="badge b-high">Alta</span></td><td class="money">R$ 0 – 300</td></tr>
+      <tr><td>B</td><td><strong>Conector ou chicote</strong> oxidado/frouxo</td><td>Dentro da máquina, entre a placa e o motor</td><td><span class="badge b-mid">Média</span></td><td class="money">R$ 0 – 50</td></tr>
+      <tr><td>C</td><td><strong>Placa</strong> com defeito (potência ou motor)</td><td>Dentro da máquina</td><td><span class="badge b-mid">Média</span></td><td class="money">R$ 300 – 1.400</td></tr>
+      <tr><td>D</td><td><strong>Motor</strong> com defeito</td><td>Atrás e embaixo do tanque</td><td><span class="badge b-low">Baixa</span></td><td>Geralmente não compensa</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="material">
+  <h2>2 · Material</h2>
+  <div class="panel">
+    <ul class="check" data-group="material">
+      <li><label><input type="checkbox"><span><strong>Multímetro com função MIN/MAX</strong> (de preferência True RMS). É o item mais importante.</span></label></li>
+      <li><label><input type="checkbox"><span>Chaves Phillips e Torx (T20 / T25)</span></label></li>
+      <li><label><input type="checkbox"><span>Limpa contato elétrico (~R$ 30)</span></label></li>
+      <li><label><input type="checkbox"><span>Abraçadeiras de nylon</span></label></li>
+      <li><label><input type="checkbox"><span>Celular pra <strong>fotografar cada conector antes de soltar</strong></span></label></li>
+    </ul>
+  </div>
+</section>
+
+<section id="teste1">
+  <h2>3 · Teste 1: tensão com a máquina funcionando ⭐</h2>
+  <div class="panel">
+    <ol class="steps">
+      <li>Coloquem a máquina num ciclo que <strong>costuma dar erro</strong> (com centrifugação ou água quente).</li>
+      <li>Meçam a tensão <strong>na tomada da máquina</strong>, com ela ligada: nos bornes por trás do espelho ou numa tomada do mesmo circuito.</li>
+      <li>Ativem a função <strong>MIN/MAX</strong> do multímetro. Ela grava a <strong>menor tensão do ciclo inteiro</strong>, inclusive no instante em que a máquina desliga.</li>
+      <li>Se der, meçam <strong>ao mesmo tempo no quadro</strong> (saída do disjuntor da máquina).</li>
+    </ol>
+    <h3>Como interpretar</h3>
+    <div class="flow">
+      <div>✅ <strong>Mínimo na tomada ≥ 112 V</strong> e mesmo assim deu F1E2 → rede OK, <strong>o problema é a máquina</strong>. Vão pro <a href="#teste3">Teste 3</a>.</div>
+      <div>⚠️ <strong>Tomada cai abaixo de 106 V, mas o quadro fica OK</strong> → mau contato <strong>entre o quadro e a tomada</strong>. Vão pro <a href="#teste2">Teste 2</a>.</div>
+      <div>🔴 <strong>O quadro também cai abaixo de 106 V</strong> → rede fraca da <strong>concessionária</strong> ou problema no padrão de entrada. Vejam a <a href="#rede">seção 5</a>.</div>
+    </div>
+  </div>
+</section>
+
+<section id="teste2">
+  <h2>4 · Teste 2: instalação (seu pai resolve)</h2>
+  <div class="panel">
+    <div class="callout danger"><strong>Com o disjuntor desligado.</strong></div>
+    <ul class="check" data-group="instalacao">
+      <li><label><input type="checkbox"><span><strong>Tomada:</strong> 20 A, de boa marca e exclusiva da máquina. Se tiver escurecido, plástico derretido ou terminal frouxo, troquem (R$ 20 – 40).</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Plugue da máquina:</strong> pinos escurecidos ou com marca de faísca indicam mau contato.</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Reapertar</strong> os bornes do disjuntor e da <strong>barra de neutro</strong> no quadro. Neutro frouxo é um causador clássico de queda sob carga.</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Emendas no caminho:</strong> refazer com conector de qualidade (tipo Wago) ou passar o fio direto.</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Circuito exclusivo:</strong> só a máquina no disjuntor dela (20 A, fio de 4 mm²).</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Aterramento:</strong> haste + fio verde até a tomada. É <strong>pela segurança contra choque</strong>; sozinho, dificilmente resolve o F1E2.</span></label></li>
+    </ul>
+    <div class="callout ok">Depois <strong>repitam o Teste 1</strong>. Se a tensão parou de cair e o erro sumiu, <strong>resolvido por R$ 0 – 100</strong>.</div>
+  </div>
+</section>
+
+<section id="rede">
+  <h2>5 · Se a rede da concessionária for fraca</h2>
+  <div class="panel">
+    <ul>
+      <li><strong>Abram um protocolo na concessionária</strong> pedindo medição de tensão. É gratuito, e eles são obrigados a corrigir se estiver fora da faixa regulamentada.</li>
+      <li>Seu pai confere o <strong>padrão de entrada</strong> (conexões do medidor e do ramal).</li>
+      <li>Último recurso: <strong>regulador/estabilizador de tensão ≥ 3 kVA</strong> (<span class="money">R$ 600 – 1.200</span>), só se a concessionária não resolver.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="teste3">
+  <h2>6 · Teste 3: abrir a máquina e inspecionar</h2>
+  <div class="panel">
+    <div class="callout danger"><strong>⚡ Perigo:</strong> tirem da tomada e <strong>esperem pelo menos 10 minutos</strong>. A placa do motor tem capacitores que guardam <strong>tensão contínua alta (pode passar de 180 V)</strong>. Antes de encostar, meçam em <strong>VDC</strong> nos capacitores grandes pra confirmar que estão descarregados.</div>
+    <h3>Onde fica cada coisa</h3>
+    <ul>
+      <li>A posição das placas muda conforme a versão de fabricação. Normalmente se chega nelas <strong>tirando o tampo superior</strong> (parafusos atrás) e/ou o <strong>painel traseiro</strong>.</li>
+      <li>O <strong>motor</strong> fica <strong>embaixo, na parte de trás do tanque</strong>. O conector dele fica no próprio motor.</li>
+      <li>Pesquisem no YouTube: <code>desmontar lava e seca Brastemp BNQ10</code>.</li>
+    </ul>
+    <h3>O que inspecionar (fotografem tudo antes)</h3>
+    <ul class="check" data-group="inspecao">
+      <li><label><input type="checkbox"><span><strong>Conector no motor:</strong> zinabre (oxidação verde ou branca), terminal frouxo, fio partido perto do conector</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Chicote no caminho:</strong> fio raspando em chapa por causa da vibração (comum e causa falha intermitente)</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Conectores nas placas:</strong> soltem e reencaixem um de cada vez, com limpa contato</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Placas:</strong> capacitor estufado, marca de queimado, solda rachada (com lupa)</span></label></li>
+      <li><label><input type="checkbox"><span><strong>Umidade:</strong> marca de água ou vazamento perto das placas</span></label></li>
+    </ul>
+    <div class="callout ok">Achou algo? Limpem, reencaixem e prendam o chicote com abraçadeira longe de chapas e de partes que vibram. Testem com um ciclo de centrifugação. <strong>Resolvido por R$ 0 – 50.</strong></div>
+  </div>
+</section>
+
+<section id="placa">
+  <h2>7 · Rede e conectores OK → é a placa</h2>
+  <div class="panel">
+    <h3>Opção 1 (recomendada): recuperar a placa</h3>
+    <p>Tirem a placa (só conectores e parafusos; seu pai consegue) e levem a uma <strong>oficina de eletrônica que conserte placas de lavadora</strong>.</p>
+    <p>Custo: <span class="money">R$ 300 – 900</span>, com garantia (peçam pelo menos 90 dias).</p>
+  </div>
+  <div class="panel">
+    <h3>Opção 2: placa nova</h3>
+    <div class="table"><table>
+      <thead><tr><th>Peça</th><th>Código de referência (127V)</th><th>Preço aprox.</th></tr></thead>
+      <tbody>
+        <tr><td>Placa de potência</td><td><code>W11342524</code> ou <code>W11694638</code></td><td class="money">R$ 780 – 1.400</td></tr>
+        <tr><td>Placa do motor / inversora</td><td><code>W11354746</code></td><td>Consultar</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout warn"><strong>Não comprem só por esses códigos.</strong> Confiram o <strong>código na etiqueta da placa da sua máquina</strong> e a <strong>versão de engenharia</strong> na etiqueta do produto (ex.: BNQ10ABANA + número da versão). Placa errada não funciona.</div>
+    <p><strong>Troca:</strong> seu pai consegue fazer, fotografando cada conector antes de soltar. Com técnico autônomo, a mão de obra fica em <span class="money">R$ 150 – 200</span>.</p>
+  </div>
+</section>
+
+<section id="custos">
+  <h2>8 · Resumo de custos</h2>
+  <div class="table"><table>
+    <thead><tr><th>Cenário</th><th>Chance</th><th>Custo total</th></tr></thead>
+    <tbody>
+      <tr><td>A · Mau contato na instalação</td><td><span class="badge b-high">Alta</span></td><td class="money">R$ 0 – 100</td></tr>
+      <tr><td>A · Rede fraca da concessionária</td><td><span class="badge b-mid">Média</span></td><td><span class="money">R$ 0</span> (protocolo) ou <span class="money">R$ 600 – 1.200</span> (regulador)</td></tr>
+      <tr><td>B · Conector ou chicote</td><td><span class="badge b-mid">Média</span></td><td class="money">R$ 0 – 50</td></tr>
+      <tr><td>C · Placa recuperada</td><td><span class="badge b-mid">Média</span></td><td class="money">R$ 300 – 900</td></tr>
+      <tr><td>C · Placa nova</td><td><span class="badge b-low">Baixa</span></td><td><span class="money">R$ 780 – 1.400</span> (+ R$ 150 – 200 se chamar técnico)</td></tr>
+      <tr><td>D · Motor</td><td><span class="badge b-low">Baixa</span></td><td>Geralmente não compensa → vender</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="panel">
+    <h3>Quando vale vender</h3>
+    <div class="cards">
+      <div class="card"><small>Nova hoje (site Brastemp)</small><b class="money">R$ 3.968</b></div>
+      <div class="card"><small>Usada funcionando 100%</small><b class="money">R$ 1.800 – 2.500</b></div>
+      <div class="card"><small>Usada com defeito</small><b class="money">R$ 800 – 1.200</b></div>
+    </div>
+    <div class="callout ok">Se o conserto custar <strong>até ~R$ 900</strong>, compensa consertar. Placa nova + técnico (~R$ 1.600) fica no limite: aí comparem com vender e comprar outra usada.</div>
+  </div>
+  <button class="reset" type="button" id="reset">Limpar todos os checklists</button>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Guia montado em 07/10/2026. Os preços são estimativas de mercado e mudam com o tempo e a região. Fontes: boletim técnico Brastemp BTLV0187, página oficial do produto e anúncios de peças.
+</footer>
+
+<script>
+  // Os checklists ficam salvos no próprio aparelho (localStorage).
+  const KEY = 'guia-lava-seca-v1';
+  const boxes = [...document.querySelectorAll('.check input[type=checkbox]')];
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+  boxes.forEach((b, i) => {
+    b.checked = !!saved[i];
+    b.addEventListener('change', () => {
+      saved[i] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+  document.getElementById('reset').addEventListener('click', () => {
+    boxes.forEach(b => b.checked = false);
+    saved = {};
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  });
+</script>
+</body>
+</html>
