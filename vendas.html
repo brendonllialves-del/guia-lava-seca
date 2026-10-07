@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title> Apple Liquid Glass — Planejamento de Desapego & Vendas</title>
+  <meta name="description" content="Simulador financeiro e catálogo de desapego com estética Apple Liquid Glass.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E💎%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #030712;
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-bg-hover: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-bright: rgba(255, 255, 255, 0.28);
+      --glass-specular: rgba(255, 255, 255, 0.35);
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --apple-blue: #38bdf8;
+      --apple-cyan: #22d3ee;
+      --apple-purple: #c084fc;
+      --apple-green: #34d399;
+      --apple-amber: #fbbf24;
+      --apple-red: #f87171;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      background: radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.14), transparent 35rem),
+                  radial-gradient(circle at 85% 20%, rgba(192, 132, 252, 0.12), transparent 30rem),
+                  radial-gradient(circle at 50% 85%, rgba(52, 211, 153, 0.09), transparent 40rem),
+                  var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 60px;
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      width: min(1200px, 100% - 36px);
+      margin: 0 auto;
+    }
+
+    /* Apple Liquid Glass Utility */
+    .liquid-glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6),
+                  inset 0 1px 1px 0 var(--glass-specular);
+      border-radius: var(--radius-lg);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .liquid-glass:hover {
+      border-color: var(--glass-border-bright);
+    }
+
+    /* Header Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(3, 7, 18, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 0;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-apple {
+      font-size: 1.3rem;
+      background: linear-gradient(135deg, #fff 30%, #9ca3af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .quick-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--apple-blue);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 48px 0 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--apple-cyan);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.65) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .lead {
+      color: var(--text-muted);
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      max-width: 780px;
+      line-height: 1.6;
+    }
+
+    /* Metric Cards Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 28px 0 36px;
+    }
+
+    .metric-card {
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--apple-blue)), transparent);
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: clamp(1.8rem, 3.2vw, 2.3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+    }
+
+    .metric-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 240px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 8px 16px 8px 36px;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--apple-blue);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      font-size: 0.9rem;
+    }
+
+    /* Table Container */
+    .table-container {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      margin-bottom: 32px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      min-width: 900px;
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
+    }
+
+    th:hover {
+      color: var(--apple-blue);
+    }
+
+    th.sort-active {
+      color: #fff;
+    }
+
+    th .sort-arrow {
+      margin-left: 4px;
+      font-size: 0.7rem;
+    }
+
+    tbody tr {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.065);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.4);
+    }
+
+    tbody td {
+      padding: 16px;
+      vertical-align: middle;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.92rem;
+    }
+
+    tbody tr td:first-child {
+      border-top-left-radius: var(--radius-md);
+      border-bottom-left-radius: var(--radius-md);
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    tbody tr td:last-child {
+      border-top-right-radius: var(--radius-md);
+      border-bottom-right-radius: var(--radius-md);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Row Details */
+    .item-cell {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .item-icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+
+    .item-icon-box svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .item-info strong {
+      display: block;
+      color: #fff;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    .item-info small {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .badge-apple { background: rgba(56, 189, 248, 0.15); color: var(--apple-blue); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-audio { background: rgba(192, 132, 252, 0.15); color: var(--apple-purple); border: 1px solid rgba(192, 132, 252, 0.3); }
+    .badge-fashion { background: rgba(244, 114, 182, 0.15); color: #f472b6; border: 1px solid rgba(244, 114, 182, 0.3); }
+    .badge-gear { background: rgba(52, 211, 153, 0.15); color: var(--apple-green); border: 1px solid rgba(52, 211, 153, 0.3); }
+
+    .price-pago {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .price-ml {
+      font-weight: 700;
+      color: #facc15;
+    }
+
+    .price-fb {
+      font-weight: 700;
+      color: var(--apple-green);
+    }
+
+    .toggle-checkbox {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--apple-blue);
+      cursor: pointer;
+    }
+
+    /* Platform Strategy Grid */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .strategy-card {
+      padding: 24px;
+    }
+
+    .strategy-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+    }
+
+    .strategy-card ul {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .strategy-card li {
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      color: #d1d5db;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .strategy-card li:last-child {
+      border-bottom: none;
+    }
+
+    .bullet {
+      color: var(--apple-blue);
+      font-weight: bold;
+    }
+
+    /* Actions Footer */
+    .footer-actions {
+      margin-top: 40px;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .btn-export {
+      background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px -4px rgba(56, 189, 248, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-export:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px -4px rgba(56, 189, 248, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      .wrap { width: min(100% - 24px, 1200px); }
+      .hero { padding: 32px 0 18px; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .controls-bar { flex-direction: column; align-items: stretch; }
+      .search-box { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-content">
+    <div class="brand">
+      <span class="brand-apple"></span>
+      <span>Liquid Glass · Portfólio de Desapego</span>
+    </div>
+    <span class="quick-tag">Simulador Ativo 2026</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="eyebrow">
+      <span>●</span> Controle Financeiro & Levantamento de Caixa
+    </div>
+    <h1>Transforme Itens Parados em Upgrade Real.</h1>
+    <p class="lead">
+      Catálogo inteligente de venda com cotações apuradas no Mercado Livre, OLX e Facebook Marketplace. 
+      Selecione os itens para calcular em tempo real quanto você coloca no bolso para comprar a nova máquina ou fazer upgrades.
+    </p>
+  </div>
+
+  <!-- Cards de Totais Dinâmicos -->
+  <div class="metrics-grid">
+    <div class="metric-card liquid-glass" style="--card-accent: var(--apple-blue);">
+      <div class="metric-header">
+        <span>Total Mercado Livre</span>
+        <span>🏷️</span>
+      </div>
+      <div class="metric-value" id="totalML">R$ 0</div>
+      <div class="metric-sub">Bruto médio na plataforma</div>
+    </div>
+
+    <div class="metric-card liquid-glass" style="--card-accent: var(--apple-green);">
+      <div class="metric-header">
+        <span>Total Facebook / Pix</span>
+        <span>⚡</span>
+      </div>
+      <div class="metric-value" id="totalFB" style="color: var(--apple-green);">R$ 0</div>
+      <div class="metric-sub">Venda direta sem taxas (100% livre)</div>
+    </div>
+
+    <div class="metric-card liquid-glass" style="--card-accent: var(--apple-purple);">
+      <div class="metric-header">
+        <span>Investimento Pago</span>
+        <span>🧾</span>
+      </div>
+      <div class="metric-value" id="totalPago" style="color: var(--apple-purple);">R$ 0</div>
+      <div class="metric-sub">Custo histórico aproximado</div>
+    </div>
+
+    <div class="metric-card liquid-glass" style="--card-accent: var(--apple-cyan);">
+      <div class="metric-header">
+        <span>Itens Selecionados</span>
+        <span>📦</span>
+      </div>
+      <div class="metric-value" id="totalItens" style="color: var(--apple-cyan);">0 / 9</div>
+      <div class="metric-sub">Marcados para liquidação</div>
+    </div>
+  </div>
+
+  <!-- Barra de Filtros e Busca -->
+  <div class="controls-bar liquid-glass">
+    <div class="filter-tabs">
+      <button class="tab-btn active" data-category="all">Todos os Itens</button>
+      <button class="tab-btn" data-category="apple">Ecossistema Apple</button>
+      <button class="tab-btn" data-category="audio">Áudio & Instrumentos</button>
+      <button class="tab-btn" data-category="perifericos">Periféricos & Mesa</button>
+      <button class="tab-btn" data-category="moda">Moda & Colecionáveis</button>
+    </div>
+
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar por modelo, marca...">
+    </div>
+  </div>
+
+  <!-- Tabela Interativa Liquid Glass -->
+  <div class="table-container liquid-glass">
+    <table id="productsTable">
+      <thead>
+        <tr>
+          <th style="width: 50px;">Vender</th>
+          <th data-sort="name">Item & Especificação <span class="sort-arrow">↕</span></th>
+          <th data-sort="category">Categoria <span class="sort-arrow">↕</span></th>
+          <th data-sort="condition">Condição <span class="sort-arrow">↕</span></th>
+          <th data-sort="pago">Preço Pago <span class="sort-arrow">↕</span></th>
+          <th data-sort="ml">Média Mercado Livre <span class="sort-arrow">↕</span></th>
+          <th data-sort="fb">Sugerido Facebook/Pix <span class="sort-arrow">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Renderizado dinamicamente via JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Comparativo Estratégico -->
+  <div class="strategy-grid">
+    <div class="strategy-card liquid-glass">
+      <h3><span>🛒</span> Mercado Livre vs. Facebook Marketplace</h3>
+      <ul>
+        <li><span class="bullet">▸</span> <strong>Mercado Livre:</strong> Maior alcance nacional e compra garantida, mas desconta de 12% a 18% em taxas de venda mais o frete.</li>
+        <li><span class="bullet">▸</span> <strong>Facebook / OLX:</strong> Venda local em mãos no Pix, 0% de taxas, dinheiro cai na hora e você não precisa despachar pelos correios.</li>
+        <li><span class="bullet">▸</span> <strong>Estratégia ideal:</strong> Anuncie no Facebook/OLX pelo preço verde (mais competitivo) e suba 15% a mais no Mercado Livre para cobrir as comissões.</li>
+      </ul>
+    </div>
+
+    <div class="strategy-card liquid-glass">
+      <h3><span>💎</span> Destaques de Alto Valor</h3>
+      <ul>
+        <li><span class="bullet">▸</span> <strong>MacBook Pro 15" 2018 (i7 / 16GB):</strong> Muito procurado por programadores e designers pelo custo-benefício de 15 polegadas com 6 núcleos.</li>
+        <li><span class="bullet">▸</span> <strong>Bota New Rock Flame Couro:</strong> Marca espanhola cultuada! Modelos com fogo são colecionáveis e têm público fiel pagando acima de R$ 1.500 no Enjoei/ML.</li>
+        <li><span class="bullet">▸</span> <strong>iPhone 12 64GB:</strong> Liquidez imediata. A R$ 1.400 - 1.500 com Face ID 100% costuma vender em poucos dias.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-actions">
+    <button class="btn-export" onclick="window.print()">Imprimir / Salvar em PDF</button>
+  </div>
+</main>
+
+<script>
+  // Base de Dados dos Itens
+  const items = [
+    {
+      id: "mbp2018",
+      name: "MacBook Pro 15\" (2018)",
+      desc: "Intel Core i7 2.6GHz 6-core · 16GB RAM · macOS Sequoia 15.7 · Impecável",
+      category: "apple",
+      categoryLabel: "Apple",
+      condition: "Excelente (Sem marcas)",
+      pago: 16000,
+      ml: 3700,
+      fb: 3200,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 18h20"/><circle cx="12" cy="10" r="1"/></svg>`
+    },
+    {
+      id: "iphone12",
+      name: "iPhone 12 Preto 64GB",
+      desc: "Face ID 100% · Câmeras e tela originais · Sem defeitos funcionais",
+      category: "apple",
+      categoryLabel: "Apple",
+      condition: "Muito Bom (Tudo Ok)",
+      pago: 3000,
+      ml: 1650,
+      fb: 1450,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="3"/><circle cx="12" cy="18" r="1"/></svg>`
+    },
+    {
+      id: "mk-black",
+      name: "Magic Keyboard com Teclado Numérico",
+      desc: "Cor Preto / Space Gray · Bateria recarregável · Original Apple",
+      category: "apple",
+      categoryLabel: "Apple",
+      condition: "Muito Bom",
+      pago: 1200,
+      ml: 850,
+      fb: 750,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/></svg>`
+    },
+    {
+      id: "mk-white",
+      name: "Magic Keyboard com Teclado Numérico",
+      desc: "Cor Branco / Prata Alumínio · Teclado Completo estendido",
+      category: "apple",
+      categoryLabel: "Apple",
+      condition: "Muito Bom",
+      pago: 1000,
+      ml: 750,
+      fb: 650,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/></svg>`
+    },
+    {
+      id: "newrock",
+      name: "Bota Salto New Rock Leather Flames",
+      desc: "Couro legítimo artesanal · Detalhes de Fogo · Importada da Espanha",
+      category: "moda",
+      categoryLabel: "Moda & Calçados",
+      condition: "Muito Boa (Colecionável)",
+      pago: 2800,
+      ml: 2200,
+      fb: 1800,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="1.8"><path d="M4 19l4-14h6l2 4 4 2v6l-4 2H4z"/><path d="M9 13c1 0 2 2 2 4"/></svg>`
+    },
+    {
+      id: "zoomg5",
+      name: "Pedaleira Zoom G5 Guitar Effects",
+      desc: "4 Telas LCD · Válvula 12AX7 Booster · Chassi de metal robusto",
+      category: "audio",
+      categoryLabel: "Áudio & Instrumentos",
+      condition: "100% Funcional",
+      pago: 1500,
+      ml: 950,
+      fb: 800,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="7" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/></svg>`
+    },
+    {
+      id: "laneylx35",
+      name: "Amplificador / Caixa Laney LX35",
+      desc: "35W RMS · Falante 10\" Custom · Canal Clean & Crunch Drive",
+      category: "audio",
+      categoryLabel: "Áudio & Instrumentos",
+      condition: "Excelente",
+      pago: 480,
+      ml: 1200,
+      fb: 950,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><line x1="8" y1="6" x2="8" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="16" y1="6" x2="16" y2="6.01"/></svg>`
+    },
+    {
+      id: "mxmaster3",
+      name: "Mouse Logitech MX Master 3 Preto",
+      desc: "Rolagem MagSpeed eletromagnética · Conexão USB / Bluetooth",
+      category: "perifericos",
+      categoryLabel: "Periféricos",
+      condition: "Com marcas de uso normais",
+      pago: 600,
+      ml: 320,
+      fb: 250,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8"><rect x="6" y="3" width="12" height="18" rx="6"/><line x1="12" y1="7" x2="12" y2="10"/></svg>`
+    },
+    {
+      id: "raindesign",
+      name: "Suporte Notebook Rain Design mStand",
+      desc: "Alumínio maciço Prata · Ergonômico de peça única para MacBook",
+      category: "perifericos",
+      categoryLabel: "Periféricos",
+      condition: "Excelente",
+      pago: 400,
+      ml: 290,
+      fb: 220,
+      selected: true,
+      iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8"><path d="M4 19h16l-3-12H7L4 19z"/><path d="M2 21h20"/></svg>`
+    }
+  ];
+
+  let currentCategory = "all";
+  let searchQuery = "";
+  let currentSort = { field: "ml", asc: false };
+
+  // Render Table
+  function renderTable() {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+
+    // Filtros
+    let filtered = items.filter(item => {
+      const matchCategory = currentCategory === "all" || item.category === currentCategory;
+      const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          item.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          item.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchCategory && matchSearch;
+    });
+
+    // Ordenação
+    filtered.sort((a, b) => {
+      let valA = a[currentSort.field];
+      let valB = b[currentSort.field];
+      if (typeof valA === "string") {
+        return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      }
+      return currentSort.asc ? valA - valB : valB - valA;
+    });
+
+    filtered.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.style.opacity = item.selected ? "1" : "0.45";
+
+      let badgeClass = "badge-gear";
+      if (item.category === "apple") badgeClass = "badge-apple";
+      if (item.category === "audio") badgeClass = "badge-audio";
+      if (item.category === "moda") badgeClass = "badge-fashion";
+
+      tr.innerHTML = `
+        <td style="text-align: center;">
+          <input type="checkbox" class="toggle-checkbox" data-id="${item.id}" ${item.selected ? "checked" : ""}>
+        </td>
+        <td>
+          <div class="item-cell">
+            <div class="item-icon-box">${item.iconSvg}</div>
+            <div class="item-info">
+              <strong>${item.name}</strong>
+              <small>${item.desc}</small>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge ${badgeClass}">${item.categoryLabel}</span></td>
+        <td style="color: #d1d5db; font-size: 0.85rem;">${item.condition}</td>
+        <td class="price-pago">R$ ${item.pago.toLocaleString('pt-BR')}</td>
+        <td class="price-ml">R$ ${item.ml.toLocaleString('pt-BR')}</td>
+        <td class="price-fb">R$ ${item.fb.toLocaleString('pt-BR')}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    updateTotals();
+  }
+
+  // Atualização dos Totais
+  function updateTotals() {
+    const selectedItems = items.filter(i => i.selected);
+    const sumML = selectedItems.reduce((acc, curr) => acc + curr.ml, 0);
+    const sumFB = selectedItems.reduce((acc, curr) => acc + curr.fb, 0);
+    const sumPago = selectedItems.reduce((acc, curr) => acc + curr.pago, 0);
+
+    document.getElementById("totalML").innerText = `R$ ${sumML.toLocaleString('pt-BR')}`;
+    document.getElementById("totalFB").innerText = `R$ ${sumFB.toLocaleString('pt-BR')}`;
+    document.getElementById("totalPago").innerText = `R$ ${sumPago.toLocaleString('pt-BR')}`;
+    document.getElementById("totalItens").innerText = `${selectedItems.length} / ${items.length}`;
+  }
+
+  // Event Listeners
+  document.getElementById("tableBody").addEventListener("change", (e) => {
+    if (e.target.classList.contains("toggle-checkbox")) {
+      const id = e.target.getAttribute("data-id");
+      const item = items.find(i => i.id === id);
+      if (item) {
+        item.selected = e.target.checked;
+        renderTable();
+      }
+    }
+  });
+
+  // Filtros por Categoria
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentCategory = btn.getAttribute("data-category");
+      renderTable();
+    });
+  });
+
+  // Campo de Busca
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    renderTable();
+  });
+
+  // Ordenação por Colunas
+  document.querySelectorAll("th[data-sort]").forEach(th => {
+    th.addEventListener("click", () => {
+      const field = th.getAttribute("data-sort");
+      if (currentSort.field === field) {
+        currentSort.asc = !currentSort.asc;
+      } else {
+        currentSort.field = field;
+        currentSort.asc = false; // Maior primeiro por padrão
+      }
+
+      document.querySelectorAll("th").forEach(t => t.classList.remove("sort-active"));
+      th.classList.add("sort-active");
+      th.querySelector(".sort-arrow").innerText = currentSort.asc ? "▲" : "▼";
+
+      renderTable();
+    });
+  });
+
+  // Inicialização
+  renderTable();
+</script>
+</body>
+</html>
